@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import berriesImg from "../../assets/images/berries.png";
 import citrusImg from "../../assets/images/citrus.png";
@@ -9,8 +10,6 @@ import exoticImg from "../../assets/images/exotic.png";
 import melonesImg from "../../assets/images/melones.png";
 import tropicalImg from "../../assets/images/tropical.png";
 import stoneImg from "../../assets/images/stone.png";
-
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,77 +19,119 @@ function CategorySection() {
   const sectionRef = useRef(null);
   const categoryRefs = useRef([]);
 
+  /*
+   * =====================================================
+   * FRONTEND DISPLAY NAME
+   *        ↓
+   * BACKEND / MONGODB CATEGORY
+   * =====================================================
+   *
+   * MongoDB:
+   *
+   * Berry
+   * Citrus
+   * Tropical
+   * Stone
+   * Exotic
+   *
+   */
+
   const categories = [
     {
       name: "Berries",
+      value: "Berry",
       image: berriesImg,
       tagline: "Sweet & Juicy",
     },
+
     {
       name: "Watermelon",
+      value: "Watermelon",
       image: melonesImg,
       tagline: "Fresh & Refreshing",
     },
+
     {
       name: "Tropical Fruits",
+      value: "Tropical",
       image: tropicalImg,
       tagline: "Exotic & Naturally Sweet",
     },
+
     {
       name: "Citrus Fruits",
+      value: "Citrus",
       image: citrusImg,
       tagline: "Fresh & Zesty",
     },
+
     {
       name: "Stone Fruits",
+      value: "Stone",
       image: stoneImg,
       tagline: "Juicy & Flavorful",
     },
+
     {
       name: "Exotic Fruits",
+      value: "Exotic",
       image: exoticImg,
       tagline: "Unique & Premium",
     },
   ];
 
   /*
-   * ==============================
-   * GSAP STAGGER ANIMATION
-   * ==============================
+   * =====================================================
+   * GSAP SCROLL ANIMATION
+   * =====================================================
    */
+
   useLayoutEffect(() => {
-  const ctx = gsap.context(() => {
-    gsap.fromTo(
-      categoryRefs.current,
-      {
-        opacity: 0,
-        y: 50,
-        scale: 0.92,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.15,
-
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-          toggleActions: "play none none none",
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        categoryRefs.current,
+        {
+          opacity: 0,
+          y: 50,
+          scale: 0.92,
         },
-      }
-    );
-  }, sectionRef);
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.7,
+          ease: "power3.out",
+          stagger: 0.15,
 
-  return () => ctx.revert();
-}, []);
-  const handleCategoryClick = (categoryName) => {
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  /*
+   * =====================================================
+   * CATEGORY CLICK
+   * =====================================================
+   */
+
+  const handleCategoryClick = (categoryValue) => {
     navigate(
-      `/product-Page?category=${encodeURIComponent(categoryName)}`
+      `/product-Page?category=${encodeURIComponent(categoryValue)}`
     );
   };
+
+  /*
+   * =====================================================
+   * VIEW ALL
+   * =====================================================
+   */
 
   const handleViewAll = () => {
     navigate("/product-Page");
@@ -99,29 +140,80 @@ function CategorySection() {
   return (
     <section
       ref={sectionRef}
-      className="w-full bg-white py-14 sm:py-16 lg:py-20 px-4 sm:px-6 border-y border-slate-100"
+      className="
+        w-full
+        bg-white
+        py-14
+        sm:py-16
+        lg:py-20
+        px-4
+        sm:px-6
+        border-y
+        border-slate-100
+      "
     >
       <div className="max-w-[1280px] mx-auto">
 
-        {/* =========================
-            SECTION HEADER
-        ========================== */}
+        {/* =================================================
+            HEADER
+        ================================================= */}
 
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-5 mb-10 sm:mb-12">
-
+        <div
+          className="
+            flex
+            flex-col
+            sm:flex-row
+            sm:items-end
+            sm:justify-between
+            gap-5
+            mb-10
+            sm:mb-12
+          "
+        >
           <div>
-            <span className="inline-block text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 mb-2">
+
+            <span
+              className="
+                inline-block
+                text-[11px]
+                sm:text-xs
+                font-bold
+                uppercase
+                tracking-[0.18em]
+                text-emerald-700
+                mb-2
+              "
+            >
               Explore Freshness
             </span>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+            <h2
+              className="
+                text-2xl
+                sm:text-3xl
+                lg:text-4xl
+                font-extrabold
+                text-slate-900
+                tracking-tight
+              "
+            >
               Shop By Category
             </h2>
 
-            <p className="text-slate-500 text-sm sm:text-base mt-2 max-w-xl leading-relaxed">
+            <p
+              className="
+                text-slate-500
+                text-sm
+                sm:text-base
+                mt-2
+                max-w-xl
+                leading-relaxed
+              "
+            >
               Discover our carefully selected collection of fresh,
               premium fruits for every taste and season.
             </p>
+
           </div>
 
           {/* Desktop View All */}
@@ -130,7 +222,8 @@ function CategorySection() {
             type="button"
             onClick={handleViewAll}
             className="
-              hidden sm:inline-flex
+              hidden
+              sm:inline-flex
               items-center
               gap-2
               text-sm
@@ -143,7 +236,9 @@ function CategorySection() {
               whitespace-nowrap
             "
           >
-            <span>View All Categories</span>
+            <span>
+              View All Categories
+            </span>
 
             <ArrowRight
               size={17}
@@ -156,20 +251,32 @@ function CategorySection() {
           </button>
         </div>
 
-        {/* =========================
+        {/* =================================================
             CATEGORY GRID
-        ========================== */}
+        ================================================= */}
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-8 sm:gap-x-6 sm:gap-y-10">
-
+        <div
+          className="
+            grid
+            grid-cols-2
+            sm:grid-cols-3
+            lg:grid-cols-6
+            gap-x-4
+            gap-y-8
+            sm:gap-x-6
+            sm:gap-y-10
+          "
+        >
           {categories.map((category, index) => (
             <button
-              key={category.name}
-              ref={(el) => {
-                categoryRefs.current[index] = el;
+              key={`${category.name}-${category.value}`}
+              ref={(element) => {
+                categoryRefs.current[index] = element;
               }}
               type="button"
-              onClick={() => handleCategoryClick(category.name)}
+              onClick={() =>
+                handleCategoryClick(category.value)
+              }
               className="
                 group
                 flex
@@ -181,9 +288,9 @@ function CategorySection() {
               "
             >
 
-              {/* =========================
+              {/* =================================================
                   IMAGE CIRCLE
-              ========================== */}
+              ================================================= */}
 
               <div
                 className="
@@ -222,6 +329,8 @@ function CategorySection() {
                   "
                 />
 
+                {/* Fruit Image */}
+
                 <img
                   src={category.image}
                   alt={category.name}
@@ -241,11 +350,12 @@ function CategorySection() {
                     group-hover:scale-110
                   "
                 />
+
               </div>
 
-              {/* =========================
+              {/* =================================================
                   CATEGORY NAME
-              ========================== */}
+              ================================================= */}
 
               <h3
                 className="
@@ -262,9 +372,9 @@ function CategorySection() {
                 {category.name}
               </h3>
 
-              {/* =========================
+              {/* =================================================
                   TAGLINE
-              ========================== */}
+              ================================================= */}
 
               <p
                 className="
@@ -283,12 +393,18 @@ function CategorySection() {
           ))}
         </div>
 
-        {/* =========================
+        {/* =================================================
             MOBILE VIEW ALL
-        ========================== */}
+        ================================================= */}
 
-        <div className="flex sm:hidden justify-center mt-10">
-
+        <div
+          className="
+            flex
+            sm:hidden
+            justify-center
+            mt-10
+          "
+        >
           <button
             type="button"
             onClick={handleViewAll}
@@ -315,7 +431,9 @@ function CategorySection() {
               group
             "
           >
-            <span>View All Categories</span>
+            <span>
+              View All Categories
+            </span>
 
             <ArrowRight
               size={16}
@@ -326,7 +444,6 @@ function CategorySection() {
               "
             />
           </button>
-
         </div>
 
       </div>

@@ -156,4 +156,4 @@ function PaymentForm({ CheckoutData, setCheckoutData }) {
   );
 }
 
-export default PaymentForm;
+export default PaymentForm;

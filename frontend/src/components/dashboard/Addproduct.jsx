@@ -112,6 +112,7 @@ function AddProduct() {
                 <option value="Tropical">Tropical</option>
                 <option value="Citrus">Citrus</option>
                 <option value="Berry">Berry</option>
+                <option value="Berry">Melone</option>
               </select>
             </div>
 

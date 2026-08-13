@@ -7,22 +7,34 @@ import { userCart } from '../context/Cartcontext';
 import { toast } from 'react-toastify';
 
 function ProductSection({ category }) {
-  const [Products, setProducts] = useState([]);
+ const [Products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
   const { fetchCartData } = userCart();
 
-  // Safe, case-insensitive, whitespace-tolerant filtering
-  const normalize = (val) => (val ?? '').toString().trim().toLowerCase();
+  const normalize = (value) =>
+    (value ?? "").toString().trim().toLowerCase();
+
+  const normalizedCategory = normalize(category);
 
   const FilterProducts =
-    !category || normalize(category) === 'all'
+    !normalizedCategory || normalizedCategory === "all"
       ? Products
-      : Products.filter(
-          (item) => normalize(item?.Category) === normalize(category)
-        );
+      : Products.filter((item) => {
+          const productCategory = normalize(item?.Category);
 
+          console.log(
+            "PRODUCT:",
+            item?.Productname,
+            "CATEGORY:",
+            productCategory,
+            "SELECTED:",
+            normalizedCategory
+          );
+
+          return productCategory === normalizedCategory;
+        });
   async function CartHandle(ProductId) {
     try {
       if (!ProductId) return;
@@ -55,20 +67,37 @@ function ProductSection({ category }) {
   }
 
   useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const cts = await getProductData();
-        const productList = Array.isArray(cts?.data?.data) ? cts.data.data : [];
-        setProducts(productList);
-      } catch (error) {
-        console.log(error);
-        setProducts([]);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+
+      const cts = await getProductData();
+
+      console.log("API RESPONSE:", cts);
+
+      const productList = Array.isArray(cts?.data?.data)
+        ? cts.data.data
+        : [];
+
+      console.log(
+        "PRODUCT CATEGORIES:",
+        productList.map((product) => ({
+          name: product.Productname,
+          category: product.Category,
+        }))
+      );
+
+      setProducts(productList);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   return (
     <div className="w-full">
