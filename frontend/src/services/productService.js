@@ -27,19 +27,15 @@ export {ProductAdd}
 
 
 
-export const  getProductData = async (data)=>{
-
-    try {
-
-        const response = await api.get('/getProducts')
-
-        return response
-        
-    } catch (error) {
-        console.log(error);
-        
-    }
-}
+export const getProductData = async () => {
+  try {
+    const response = await api.get("/getProducts");
+    return response;
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    throw error;
+  }
+};
 
 export async function getBestSellerProducts() {
   const response = await api.get("/best-sellers");

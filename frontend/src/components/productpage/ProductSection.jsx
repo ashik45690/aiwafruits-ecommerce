@@ -39,38 +39,71 @@ function ProductSection({ category }) {
   // ----------------------------------------
   // Fetch products
   // ----------------------------------------
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
+useEffect(() => {
+  const fetchProducts = async () => {
+    const CACHE_KEY = "aiwa_fruits_products";
+    const CACHE_TIME = 5 * 60 * 1000; // 5 minutes
 
-        const response = await getProductData();
+    // ----------------------------------------
+    // 1. Check cached products
+    // ----------------------------------------
+    try {
+      const cachedData = localStorage.getItem(CACHE_KEY);
 
-        console.log("API RESPONSE:", response);
+      if (cachedData) {
+        const parsed = JSON.parse(cachedData);
 
-        const productList = Array.isArray(response?.data?.data)
-          ? response.data.data
-          : [];
+        const isValid =
+          Date.now() - parsed.timestamp < CACHE_TIME;
 
-        console.log(
-          "PRODUCT CATEGORIES:",
-          productList.map((product) => ({
-            name: product.Productname,
-            category: product.Category,
-          }))
-        );
+        if (isValid && Array.isArray(parsed.products)) {
+          setProducts(parsed.products);
 
-        setProducts(productList);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-        setProducts([]);
-      } finally {
-        setLoading(false);
+          // Important:
+          // Don't show skeleton when cached data exists
+          setLoading(false);
+        }
       }
-    };
+    } catch (error) {
+      console.error("Cache read error:", error);
+    }
 
-    fetchProducts();
-  }, []);
+    // ----------------------------------------
+    // 2. Fetch fresh products
+    // ----------------------------------------
+    try {
+      const response = await getProductData();
+
+      const productList = Array.isArray(response?.data?.data)
+        ? response.data.data
+        : [];
+
+      if (productList.length > 0) {
+        setProducts(productList);
+
+        // ----------------------------------------
+        // 3. Save fresh data to cache
+        // ----------------------------------------
+        localStorage.setItem(
+          CACHE_KEY,
+          JSON.stringify({
+            products: productList,
+            timestamp: Date.now(),
+          })
+        );
+      }
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+
+      // If cache exists, keep showing cached products
+      setProducts((currentProducts) => currentProducts);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   // ----------------------------------------
   // Add product to cart
