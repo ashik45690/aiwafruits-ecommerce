@@ -21,7 +21,7 @@ const port = process.env.PORT || 4040;
 
 app.use(cors(
   {
-    origin:"http://localhost:5173",
+    origin:"https://aiwafruits-ecommerce-kgl3.vercel.app",
     credentials:true
   }
 ))
