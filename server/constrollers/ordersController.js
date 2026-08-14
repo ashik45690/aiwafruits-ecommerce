@@ -8,22 +8,50 @@ import axios from 'axios'
 
 async function sendWhatsAppNotification(order) {
   try {
-    const token = "EAGKw3hdWHEABSJXoD1Sz09PcZBdFQhuIzBty0Y6mWC0LbprdB6DWB0mOwIlymNooAnZAWZBogmKfrrObhPZCjNZBxGf8ksj7LKP1QRuaf95eO6nOZAPKGKPV39jCdFjjmPeEjvNnsYATVtLtQo9INO3mEg8SE0UbAwOCZCKZARYN7WOhEQM6n1qWqNSOp29k3g8FaJiRWpEr9lF7OB7nVZBPc0jZCRb8ObvMr06l05dQjR3tBxZBiP1IxdTNIu5h4UVsy930JoCg8XNZBn1ltOxfsW4GrAZDZD"; // 👈 പുതിയ ടോക്കൺ
+    const token = process.env.WHATSAPP_TOKEN || "EAGKw3hdWHEABSJXoD1Sz09PcZBdFQhuIzBty0Y6mWC0LbprdB6DWB0mOwIlymNooAnZAWZBogmKfrrObhPZCjNZBxGf8ksj7LKP1QRuaf95eO6nOZAPKGKPV39jCdFjjmPeEjvNnsYATVtLtQo9INO3mEg8SE0UbAwOCZCKZARYN7WOhEQM6n1qWqNSOp29k3g8FaJiRWpEr9lF7OB7nVZBPc0jZCRb8ObvMr06l05dQjR3tBxZBiP1IxdTNIu5h4UVsy930JoCg8XNZBn1ltOxfsW4GrAZDZD"; 
     const phoneNumberId = "1307687399087389";
     const ownerPhoneNumber = "917356884862";
+
+    // 🛍️ പ്രോഡക്റ്റുകൾ സ്റ്റൈലിഷായി ലിസ്റ്റ് ചെയ്യാൻ Map ചെയ്യുന്നു
+    const itemsList = order.items
+      .map(
+        (item, index) =>
+          `*${index + 1}. ${item.productName || item.title || "Fruit Item"}*\n` +
+          `   └ 📦 Qty: *${item.quantity}*  ×  ₹${item.price} = *₹${item.quantity * item.price}*`
+      )
+      .join("\n\n");
+
+    // 💬 WhatsApp Message Text Structure
+    const messageBody = 
+`🛍️ *NEW ORDER RECEIVED!* 🛍️
+──────────────────────────
+📌 *Order ID:* \`#${order._id.toString().slice(-6).toUpperCase()}\`
+📅 *Date:* ${new Date().toLocaleDateString("en-IN")}
+
+🛒 *ITEMS ORDERED:*
+${itemsList}
+
+──────────────────────────
+💳 *PAYMENT SUMMARY:*
+💵 *Total Amount:* *₹${order.totalAmount}*
+💳 *Payment Mode:* ${order.paymentMethod?.toUpperCase() || "COD"}
+🚚 *Delivery:* ${order.deliveryMethod || "Standard"}
+
+📍 *CUSTOMER DETAILS:*
+👤 *Name:* ${order.shippingAddress?.fullName || "Customer"}
+📞 *Phone:* ${order.shippingAddress?.phone || "N/A"}
+🏠 *Address:* ${order.shippingAddress?.address || ""}, ${order.shippingAddress?.city || ""}
+
+──────────────────────────
+🚀 *Action Required:* Please process the order soon!`;
 
     const messageData = {
       messaging_product: "whatsapp",
       to: ownerPhoneNumber,
       type: "text",
       text: {
-        body: `🛒 *New Order Received!*
-
-*Order ID:* ${order._id}
-*Total Amount:* ₹${order.totalAmount}
-*Payment Method:* ${order.paymentMethod}
-*Delivery Method:* ${order.deliveryMethod}`
-      }
+        body: messageBody,
+      },
     };
 
     await axios.post(
@@ -32,17 +60,15 @@ async function sendWhatsAppNotification(order) {
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       }
     );
-    console.log("✅ Order WhatsApp alert sent!");
+    console.log("✅ Order WhatsApp alert sent successfully!");
   } catch (err) {
     console.error("❌ WhatsApp notification error:", err.response?.data || err.message);
   }
 }
-
-
 export async function OrdersController(req, res) {
   try {
 
