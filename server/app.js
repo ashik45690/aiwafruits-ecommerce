@@ -19,12 +19,16 @@ const app = express();
 
 const port = process.env.PORT || 4040;
 
-app.use(cors(
-  {
-    origin:"https://aiwafruits-ecommerce-kgl3.vercel.app",
-    credentials:true
-  }
-))
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://aiwafruits-ecommerce-kgl3.vercel.app",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(cookie())
  app.use(express.json())
  app.use(express.urlencoded({extended:false}))

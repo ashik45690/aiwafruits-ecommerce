@@ -19,7 +19,7 @@ function RegisterPage() {
 
             <div className="relative z-10 p-10 pb-12">
               <div className="flex items-center gap-2 bg-white/15 border border-white/20 backdrop-blur-sm px-4 py-2 rounded-full w-fit mb-6">
-                <Leaf size={16} className="text-emerald-300" />
+               
                 <span className="text-white text-xs font-bold">Join 10,000+ Happy Customers</span>
               </div>
 
