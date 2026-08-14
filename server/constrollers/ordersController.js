@@ -3,11 +3,50 @@ import { orderDatabae } from "../model/orderModel.js";
 import ProductDatabase from "../model/productModel.js";
 
 
+// orderController.js ഫയലിൽ:
 
+async function sendWhatsAppNotification(order) {
+  try {
+    const token = "EAGKw3hdWHEABSJXoD1Sz09PcZBdFQhuIzBty0Y6mWC0LbprdB6DWB0mOwIlymNooAnZAWZBogmKfrrObhPZCjNZBxGf8ksj7LKP1QRuaf95eO6nOZAPKGKPV39jCdFjjmPeEjvNnsYATVtLtQo9INO3mEg8SE0UbAwOCZCKZARYN7WOhEQM6n1qWqNSOp29k3g8FaJiRWpEr9lF7OB7nVZBPc0jZCRb8ObvMr06l05dQjR3tBxZBiP1IxdTNIu5h4UVsy930JoCg8XNZBn1ltOxfsW4GrAZDZD"; // 👈 പുതിയ ടോക്കൺ
+    const phoneNumberId = "1307687399087389";
+    const ownerPhoneNumber = "917356884862";
+
+    const messageData = {
+      messaging_product: "whatsapp",
+      to: ownerPhoneNumber,
+      type: "text",
+      text: {
+        body: `🛒 *New Order Received!*
+
+*Order ID:* ${order._id}
+*Total Amount:* ₹${order.totalAmount}
+*Payment Method:* ${order.paymentMethod}
+*Delivery Method:* ${order.deliveryMethod}`
+      }
+    };
+
+    await axios.post(
+      `https://graph.facebook.com/v20.0/${phoneNumberId}/messages`,
+      messageData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+    console.log("✅ Order WhatsApp alert sent!");
+  } catch (err) {
+    console.error("❌ WhatsApp notification error:", err.response?.data || err.message);
+  }
+}
 
 
 export async function OrdersController(req, res) {
   try {
+
+    console.log('broyyyy');
+    
     const userId = req.user.user._id;
 
     const {
@@ -48,6 +87,8 @@ export async function OrdersController(req, res) {
     });
 
     await newOrder.save();
+
+    await sendWhatsAppNotification(newOrder);
 
     // Reduce Stock
     for (const item of items) {
