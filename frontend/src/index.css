@@ -173,3 +173,17 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+@media (max-width: 640px) {
+  .Toastify__toast-container {
+    width: auto !important;
+    left: 16px !important;
+    right: 16px !important;
+  }
+
+  .Toastify__toast {
+    width: auto !important;
+    min-height: 50px !important;
+    border-radius: 12px !important;
+    margin-bottom: 10px !important;
+  }
+}

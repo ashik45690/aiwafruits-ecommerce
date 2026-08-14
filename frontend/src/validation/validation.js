@@ -13,11 +13,10 @@ export const RegisterValidation = z
       .toLowerCase()
       .email("Please enter a valid email address"),
 
-    Password: z
-      .string()
-      .trim()
-      .min(4, "Password must be at least 8 characters"),
-    //   .regex(/[A-Z]/, "Password must contain at least one uppercase letter"),
+   Password: z
+  .string()
+  .trim()
+  .min(3, "Password must be at least 3 characters"),
 
     confirmpassword: z.string(),
 
