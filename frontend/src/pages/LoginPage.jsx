@@ -30,10 +30,7 @@ function LoginPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/90 via-emerald-900/40 to-transparent" />
 
             <div className="relative z-10 p-10 pb-12">
-              <div className="flex items-center gap-2 bg-white/15 border border-white/20 backdrop-blur-sm px-4 py-2 rounded-full w-fit mb-6">
-                <Leaf size={16} className="text-emerald-300" />
-                <span className="text-white text-xs font-bold">100% Organic Certified</span>
-              </div>
+              
 
               <h2 className="text-4xl font-extrabold text-white leading-tight mb-4">
                 Taste the freshness<br />of nature.

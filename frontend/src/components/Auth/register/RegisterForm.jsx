@@ -4,7 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import { registerservice } from "../../../services/authService";
 import { toast } from "react-toastify";
 import { RegisterValidation } from "../../../validation/validation";
-import { Leaf, User, Mail, Lock, ArrowRight } from "lucide-react";
+import { Leaf, User, Mail, Lock, ArrowRight, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function RegisterForm() {
@@ -85,12 +85,12 @@ function RegisterForm() {
   return (
     <div className="w-full max-w-md">
 
+     
+
       {/* Brand Header */}
       <div className="mb-7">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center">
-            <Leaf size={16} className="text-white" />
-          </div>
+          
           <span className="text-sm font-extrabold text-emerald-800">AIWA FRUITS</span>
         </div>
 
@@ -103,7 +103,7 @@ function RegisterForm() {
       </div>
 
       {/* Social Sign-up */}
-      <div className="grid grid-cols-2 gap-3 mb-6">
+      <div className="grid grid-cols-1 gap-3 mb-6">
         <button
           type="button"
           className="py-2.5 border border-slate-200 hover:border-slate-300 rounded-xl font-bold text-sm text-slate-700 flex items-center justify-center gap-2 transition cursor-pointer"
@@ -112,13 +112,6 @@ function RegisterForm() {
           Google
         </button>
 
-        <button
-          type="button"
-          className="py-2.5 border border-slate-200 hover:border-slate-300 rounded-xl font-bold text-sm text-slate-700 flex items-center justify-center gap-2 transition cursor-pointer"
-        >
-          <FaApple size={18} />
-          Apple
-        </button>
       </div>
 
       <div className="flex items-center gap-3 mb-6">

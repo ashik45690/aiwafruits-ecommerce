@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { AuthContext } from "../../context/Authcontext";
 import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
 function Loginfrom() {
   const [LoginformData, setLoginformData] = useState({
@@ -72,14 +73,12 @@ function Loginfrom() {
       {/* Brand Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-emerald-700 flex items-center justify-center">
-            <Leaf size={16} className="text-white" />
-          </div>
+        
           <span className="text-sm font-extrabold text-emerald-800">AIWA FRUITS</span>
         </div>
 
         <h2 className="text-3xl font-extrabold text-slate-900 leading-tight">
-          Welcome back 👋
+          Welcome back 
         </h2>
         <p className="text-slate-500 text-sm font-medium mt-1.5">
           Sign in to continue your healthy journey.
@@ -173,13 +172,14 @@ function Loginfrom() {
         <div className="bg-slate-200 h-px flex-1" />
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <button className="border border-slate-200 hover:border-slate-300 py-2.5 rounded-xl text-sm font-bold text-slate-700 flex items-center justify-center gap-2 transition cursor-pointer">
-          <span>🇬</span> Google
-        </button>
-        <button className="border border-slate-200 hover:border-slate-300 py-2.5 rounded-xl text-sm font-bold text-slate-700 flex items-center justify-center gap-2 transition cursor-pointer">
-          <span>🍎</span> Apple
-        </button>
+      <div className="grid grid-cols-1 gap-3">
+         <button
+                  type="button"
+                  className="py-2.5 border border-slate-200 hover:border-slate-300 rounded-xl font-bold text-sm text-slate-700 flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  <FcGoogle size={18} />
+                  Google
+                </button>
       </div>
 
       <p className="text-center text-xs font-semibold text-slate-500 mt-7">
