@@ -27,7 +27,7 @@ export async function AuthMiddleware(req,res,next) {
     } catch (error) {
         res.json({
             success:false,
-            message:"Authmiddleware faield ..check now "
+            message:"Login First "
         })
     }
 }
