@@ -1,16 +1,11 @@
-import express from "express";
-import { GeminiController } from "../constrollers/GeminiController.js";
+import express from 'express';
+import { geminiController } from '../constrollers/GeminiController';
+
 
 const router = express.Router();
 
-router.post("/gemini-auto-description-maker", (req, res) => {
-  console.log("🔥 GEMINI ROUTE REACHED");
-  console.log("Body:", req.body);
 
-  res.json({
-    success: true,
-    message: "Gemini route is working",
-  });
-});
+router.post('/gemini-auto-description-maker', geminiController)
 
-export default router;
+
+export default router

@@ -5,7 +5,7 @@
     apiKey:process.env.GEMINI_API_KEY
  })
  
- export async function GeminiController(req ,res) {
+ export async function geminiController(req ,res) {
     
     const {productname} =  req.body ;
 
