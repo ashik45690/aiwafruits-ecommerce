@@ -35,10 +35,11 @@ Requirements:
 `;
 
 
-const response = await Geminiai.models.generateContent({
-    model: 'gemini-flash-latest',
-    contents: prompt
-})
+
+ const response = await Geminiai.models.generateContent({
+      model: "gemini-3.5-flash",
+      contents: prompt,
+    });
 
   const des = response.text?.trim();
   
