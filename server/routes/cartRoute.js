@@ -1,5 +1,5 @@
 import express from 'express';
-import { addToCartController, getCartController, removeController, updateCartQuantity } from '../constrollers/cartController.js';
+import { addToCartController, getCartController, removeController, updateCartQuantity } from '../controllers/cartController.js';
 import { AuthMiddleware } from '../middleware/authMiddleware.js';
 
 
