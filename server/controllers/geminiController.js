@@ -36,7 +36,7 @@ Requirements:
 
 
 const response = await Geminiai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-flash-latest',
     contents: prompt
 })
 
