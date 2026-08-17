@@ -9,7 +9,7 @@
     
     const {productname} =  req.body ;
 
-    if (!productname.trim()) {
+    if (!productname?.trim()) {
         
         console.log('productname not found for Ai description');
         return ;
