@@ -107,7 +107,7 @@ function Navbar() {
             My Orders
           </li>
 
-          {/* <li 
+          <li 
             onClick={() => HandleNavigate("/Dashboard")}
             className={`cursor-pointer transition-colors duration-200 py-1 border-b-2 ${
               isActive("/Dashboard") 
@@ -116,7 +116,7 @@ function Navbar() {
             }`}
           >
             Dashboard
-          </li> */}
+          </li>
         </ul>
 
         {/* Desktop Actions */}

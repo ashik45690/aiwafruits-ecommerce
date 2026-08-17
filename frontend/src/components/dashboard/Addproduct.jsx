@@ -1,6 +1,7 @@
 import { UploadCloud, PackagePlus, Save } from "lucide-react";
 import { useState } from "react";
 import { ProductAdd } from "../../services/productService";
+import { GeminiService } from "../../services/geminiService";
 
 function AddProduct() {
   const [NewproductData, setNewproductData] = useState({
@@ -11,6 +12,31 @@ function AddProduct() {
     Description: "",
     Image: "",
   });
+
+
+  async function HandlegeminiAuto() {
+    const ProductName = NewproductData.Productname;
+
+    if (!ProductName) {
+      return;
+    }
+    try {
+
+      const response = await GeminiService(ProductName)
+      
+      const autoDescription = response.data.des;
+
+      setNewproductData((prev)=>({
+        ...prev,
+        Description:autoDescription
+      }))
+      
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
   const [image, setImage] = useState(null);
 
@@ -149,11 +175,25 @@ function AddProduct() {
             </label>
             <textarea
               name="Description"
-              onChange={handleForm}
+              value={NewproductData.Description}
+            onChange={(e) =>
+    setNewproductData((prev) => ({
+      ...prev,
+      Description: e.target.value,
+    }))
+  }
               rows="6"
               className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium text-slate-800 resize-none focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition"
               placeholder="Describe the freshness, origin, taste, and quality..."
             />
+
+            <button
+            onClick={HandlegeminiAuto}
+            className="text-white bg-violet-700 p-2 font-bold my-2 rounded-full cursor-pointer"
+            >
+                Generate Ai Description
+            </button>
+
           </div>
         </div>
 

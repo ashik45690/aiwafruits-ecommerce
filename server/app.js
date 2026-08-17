@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import Database from "./config/db.js";
 import cookie from 'cookie-parser'
 import orderRoute from './routes/orderRoute.js'
+import geminroutes from './routes/geminiRoute.js'
 import axios from 'axios'
 dotenv.config()
 
@@ -47,6 +48,7 @@ Database()
  app.use('/',productroute)
  app.use('/',cartRoute)
  app.use('/',orderRoute)
+ app.use('/',geminroutes)
 
  app.get("/test-whatsapp", async (req, res) => {
   try {
