@@ -2,6 +2,7 @@ import { UserDatabase } from "../model/userModel.js";
 import bcrypt from "bcrypt";
 import jwt, { decode } from "jsonwebtoken";
 import cookie from "cookie-parser";
+import { sendOTPEmail } from "../utils/sendEmail.js";
 
 export async function Registercontroller(req, res) {
   console.log(req.body);
