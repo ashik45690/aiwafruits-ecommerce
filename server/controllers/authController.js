@@ -1,87 +1,95 @@
 import { UserDatabase } from "../model/userModel.js";
 import bcrypt from "bcrypt";
-import jwt, { decode } from "jsonwebtoken";
-import cookie from "cookie-parser";
+import jwt from "jsonwebtoken";
 import { sendOTPEmail } from "../utils/sendEmail.js";
 
 export async function Registercontroller(req, res) {
   console.log(req.body);
 
   try {
-    const { fullname, email, Password, confirmpassword, checkbox } = req.body;
+    const {
+      fullname,
+      email,
+      Password,
+      confirmpassword,
+      checkbox,
+    } = req.body;
 
-    if (!fullname || !email || !Password || !confirmpassword || !checkbox) {
-      console.log("Fields Are Empty");
-
+    if (
+      !fullname ||
+      !email ||
+      !Password ||
+      !confirmpassword ||
+      !checkbox
+    ) {
       return res.json({
         success: false,
-        message: "All Field are Required",
+        message: "All fields are required",
       });
     }
 
     if (Password !== confirmpassword) {
-      console.log("User Password dosnt match");
-
-      res.json({
-        success: false,
-        message: "Password Doesn't match",
-      });
-    }
-    if (!checkbox) {
-      console.log("User Not allowed terms and Condition");
-
-      res.json({
-        success: false,
-        message: "Terms & Condition Must accept ",
-      });
-    }
-
-    const user = await UserDatabase.findOne({ email });
-
-    console.log(user, "kkk");
-
-    if (user) {
-      console.log("Already Registerd user Attempt to Login");
-
       return res.json({
         success: false,
-        message: "This Email Already Registerd",
+        message: "Passwords don't match",
       });
     }
 
-    const salt = 10;
+    if (!checkbox) {
+      return res.json({
+        success: false,
+        message: "Terms & Conditions must be accepted",
+      });
+    }
 
-    const hashedPassword = await bcrypt.hash(Password, salt);
+    const TrimmedEmail = email.trim().toLowerCase();
 
-    console.log(
-      hashedPassword,
-      "your password Is Hashed for security purpose ",
+    const user = await UserDatabase.findOne({
+      email: TrimmedEmail,
+    });
+
+    if (user) {
+      return res.json({
+        success: false,
+        message: "This email is already registered",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      Password,
+      10
     );
 
-    const NewUser = UserDatabase.insertOne({
+    const NewUser = await UserDatabase.create({
       fullname,
-      email,
+      email: TrimmedEmail,
       Password: hashedPassword,
       checkbox,
     });
 
-    if (NewUser) {
-      console.log("New User Created");
+    return res.json({
+      success: true,
+      message: "User registered successfully",
+      data: NewUser,
+    });
 
-      res.json({
-        success: true,
-        message: "User Registerd Successfully",
-        data: NewUser,
-      });
-    }
   } catch (error) {
-    console.log(error);
+    console.error("Register Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Registration failed",
+    });
   }
 }
 
+
 export async function UserLogin(req, res) {
   try {
-    console.log(req.body, "data req body il verunnund");
+    console.log(
+      req.body,
+      "data req body il verunnund"
+    );
 
     const { email, password } = req.body;
 
@@ -92,20 +100,27 @@ export async function UserLogin(req, res) {
       });
     }
 
-    const TrimedEmail = email.trim();
+    const TrimmedEmail = email
+      .trim()
+      .toLowerCase();
 
-    const user = await UserDatabase.findOne({ email: TrimedEmail });
+    const user = await UserDatabase.findOne({
+      email: TrimmedEmail,
+    });
 
     console.log(user);
 
     if (!user) {
       return res.json({
         success: false,
-        message: "User Not Found . Register First",
+        message: "User Not Found. Register First",
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.Password);
+    const isMatch = await bcrypt.compare(
+      password,
+      user.Password
+    );
 
     if (!isMatch) {
       return res.json({
@@ -116,35 +131,45 @@ export async function UserLogin(req, res) {
 
     const token = jwt.sign(
       {
-        id: user.Id,
+        id: user._id,
         user: user,
       },
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
-      },
+      }
     );
 
-   res.cookie("token", token, {
-  httpOnly: true,
-  secure: true,
-  sameSite: "none",
-  maxAge: 7 * 24 * 60 * 60 * 1000,
-});
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     return res.json({
       success: true,
-      message: "Login Successful ",
+      message: "Login Successful",
       user: {
-        id: user.Id,
+        id: user._id,
         data: user,
         token: token,
       },
     });
+
   } catch (error) {
-    console.log(error, "something went Wrong");
+    console.error(
+      error,
+      "Something went wrong"
+    );
+
+    return res.status(500).json({
+      success: false,
+      message: "Login failed",
+    });
   }
 }
+
 
 export async function getCurrentUser(req, res) {
   try {
@@ -159,22 +184,22 @@ export async function getCurrentUser(req, res) {
       });
     }
 
-    console.log("token Und");
+    const decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
 
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    const CurrentUserData = decoded.user;
 
-    console.log(decode);
-
-    const CurrentUserData = decode.user;
-
-    res.json({
+    return res.json({
       success: true,
       CurrentUserData,
     });
-  } catch (error) {
-    console.log(error);
 
-    res.status(500).json({
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
       success: false,
       message: "Server Error",
     });
@@ -182,76 +207,120 @@ export async function getCurrentUser(req, res) {
 }
 
 
- export async function logout(req,res) {
+export async function logout(req, res) {
   try {
 
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "none",
     });
 
-      return res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Logged out successfully",
     });
-    
+
   } catch (error) {
-    
+
     console.log(error);
 
-    res.json({
-       success:false,
-       message:"Logout Failed"
-    })
-    
+    return res.status(500).json({
+      success: false,
+      message: "Logout Failed",
+    });
   }
 }
 
-export async function SendForgottPasswordOTP(req,res) {
+
+/* =====================================================
+   FORGOT PASSWORD - SEND OTP
+===================================================== */
+
+export async function SendForgottPasswordOTP(req, res) {
   try {
 
-    const {email} = req.body;
+    const { email } = req.body;
 
     if (!email) {
-      res.json({
-        success:false,
-        message:"Email is Required !"
-      })
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
     }
 
-    const TrimmedEmail = email.trim();
+    const TrimmedEmail = email
+      .trim()
+      .toLowerCase();
 
     const user = await UserDatabase.findOne({
-      email:TrimmedEmail
+      email: TrimmedEmail,
     });
 
+    /*
+      Don't reveal whether an email exists.
+      This is safer for password reset.
+    */
+
     if (!user) {
-      res.json({
-        success:false,
-        message:'OTP has been sent'
-      })
+      return res.status(200).json({
+        success: true,
+        message:
+          "If this email is registered, an OTP has been sent",
+      });
     }
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    /*
+      Generate 6 digit OTP
+    */
 
-    const hashedOTP = await bcrypt.hash(otp, 10);
+    const otp = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    /*
+      Hash OTP before storing
+    */
+
+    const hashedOTP = await bcrypt.hash(
+      otp,
+      10
+    );
 
     user.otp = hashedOTP;
-    user.otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+
+    user.otpExpiry = new Date(
+      Date.now() + 5 * 60 * 1000
+    );
 
     await user.save();
 
-    await sendOTPEmail(TrimmedEmail, otp);
+    /*
+      Send OTP using Brevo
+    */
 
-    return res.json({
+    await sendOTPEmail(
+      TrimmedEmail,
+      otp
+    );
+
+    console.log(
+      `OTP sent successfully to ${TrimmedEmail}`
+    );
+
+    return res.status(200).json({
       success: true,
       message: "OTP sent successfully",
     });
-    
+
   } catch (error) {
-    console.log(error);
-      return res.json({
+
+    console.error(
+      "Send OTP Error:",
+      error
+    );
+
+    return res.status(500).json({
       success: false,
       message: "Failed to send OTP",
     });
@@ -259,32 +328,56 @@ export async function SendForgottPasswordOTP(req,res) {
 }
 
 
-export async function verifyForgotPasswordOTP(req, res) {
+/* =====================================================
+   FORGOT PASSWORD - VERIFY OTP
+===================================================== */
+
+export async function verifyForgotPasswordOTP(
+  req,
+  res
+) {
   try {
+
     const { email, otp } = req.body;
 
     if (!email || !otp) {
       return res.status(400).json({
         success: false,
-        message: "Email and OTP are required",
+        message:
+          "Email and OTP are required",
       });
     }
+
+    const TrimmedEmail = email
+      .trim()
+      .toLowerCase();
 
     const user = await UserDatabase.findOne({
-      email: email.trim(),
+      email: TrimmedEmail,
     });
 
-    if (!user || !user.otp || !user.otpExpiry) {
+    if (
+      !user ||
+      !user.otp ||
+      !user.otpExpiry
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid OTP",
+        message: "Invalid or expired OTP",
       });
     }
 
-    // Check expiry
-    if (new Date() > user.otpExpiry) {
+    /*
+      Check expiry
+    */
+
+    if (
+      new Date() > user.otpExpiry
+    ) {
+
       user.otp = null;
       user.otpExpiry = null;
+
       await user.save();
 
       return res.status(400).json({
@@ -293,11 +386,15 @@ export async function verifyForgotPasswordOTP(req, res) {
       });
     }
 
-    // Compare entered OTP with hashed OTP
-    const isValidOTP = await bcrypt.compare(
-      otp.toString(),
-      user.otp
-    );
+    /*
+      Compare OTP
+    */
+
+    const isValidOTP =
+      await bcrypt.compare(
+        otp.toString(),
+        user.otp
+      );
 
     if (!isValidOTP) {
       return res.status(400).json({
@@ -306,11 +403,20 @@ export async function verifyForgotPasswordOTP(req, res) {
       });
     }
 
-    // OTP successfully verified
+    /*
+      OTP verified.
+      Clear OTP from database.
+    */
+
     user.otp = null;
     user.otpExpiry = null;
 
-    // Generate temporary reset token
+    await user.save();
+
+    /*
+      Temporary password reset token
+    */
+
     const resetToken = jwt.sign(
       {
         userId: user._id.toString(),
@@ -322,62 +428,103 @@ export async function verifyForgotPasswordOTP(req, res) {
       }
     );
 
-    await user.save();
-
     return res.status(200).json({
       success: true,
-      message: "OTP verified successfully",
+      message:
+        "OTP verified successfully",
       resetToken,
     });
+
   } catch (error) {
-    console.error("Verify OTP Error:", error);
+
+    console.error(
+      "Verify OTP Error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: "OTP verification failed",
+      message:
+        "OTP verification failed",
     });
   }
 }
 
 
-export async function resetPassword(req, res) {
-  try {
-    const { resetToken, newPassword, confirmPassword } = req.body;
+/* =====================================================
+   FORGOT PASSWORD - RESET PASSWORD
+===================================================== */
 
-    if (!resetToken || !newPassword || !confirmPassword) {
+export async function resetPassword(
+  req,
+  res
+) {
+  try {
+
+    const {
+      resetToken,
+      newPassword,
+      confirmPassword,
+    } = req.body;
+
+    if (
+      !resetToken ||
+      !newPassword ||
+      !confirmPassword
+    ) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required",
+        message:
+          "All fields are required",
       });
     }
 
-    if (newPassword !== confirmPassword) {
+    if (
+      newPassword !== confirmPassword
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Passwords do not match",
+        message:
+          "Passwords do not match",
       });
     }
 
     if (newPassword.length < 6) {
       return res.status(400).json({
         success: false,
-        message: "Password must contain at least 6 characters",
+        message:
+          "Password must contain at least 6 characters",
       });
     }
+
+    /*
+      Verify reset token
+    */
 
     const decoded = jwt.verify(
       resetToken,
       process.env.JWT_SECRET
     );
 
-    if (decoded.purpose !== "password-reset") {
+    if (
+      decoded.purpose !==
+      "password-reset"
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid reset token",
+        message:
+          "Invalid reset token",
       });
     }
 
-    const user = await UserDatabase.findById(decoded.userId);
+    /*
+      Find user
+    */
+
+    const user =
+      await UserDatabase.findById(
+        decoded.userId
+      );
 
     if (!user) {
       return res.status(404).json({
@@ -386,32 +533,60 @@ export async function resetPassword(req, res) {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(
-      newPassword,
-      10
-    );
+    /*
+      Hash new password
+    */
 
-    user.Password = hashedPassword;
+    const hashedPassword =
+      await bcrypt.hash(
+        newPassword,
+        10
+      );
+
+    user.Password =
+      hashedPassword;
 
     await user.save();
 
     return res.status(200).json({
       success: true,
-      message: "Password reset successfully",
+      message:
+        "Password reset successfully",
     });
-  } catch (error) {
-    console.error("Reset Password Error:", error);
 
-    if (error.name === "TokenExpiredError") {
+  } catch (error) {
+
+    console.error(
+      "Reset Password Error:",
+      error
+    );
+
+    if (
+      error.name ===
+      "TokenExpiredError"
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Reset session expired. Please request OTP again.",
+        message:
+          "Reset session expired. Please request OTP again.",
+      });
+    }
+
+    if (
+      error.name ===
+      "JsonWebTokenError"
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Invalid reset token",
       });
     }
 
     return res.status(500).json({
       success: false,
-      message: "Failed to reset password",
+      message:
+        "Failed to reset password",
     });
   }
 }
