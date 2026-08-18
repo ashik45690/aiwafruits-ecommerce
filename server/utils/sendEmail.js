@@ -1,4 +1,29 @@
 export async function sendOTPEmail(email, otp) {
+
+
+     console.log("========== BREVO DEBUG ==========");
+     
+  const apiKey = process.env.BREVO_API_KEY;
+  const senderEmail = process.env.BREVO_SENDER_EMAIL;
+
+  console.log("Brevo API key exists:", Boolean(apiKey));
+  console.log(
+    "Brevo API key prefix:",
+    apiKey?.slice(0, 9)
+  );
+  console.log(
+    "Brevo sender:",
+    senderEmail
+  );
+
+  if (!apiKey) {
+    throw new Error("BREVO_API_KEY is missing");
+  }
+
+  if (!senderEmail) {
+    throw new Error("BREVO_SENDER_EMAIL is missing");
+  }
+
   const response = await fetch(
     "https://api.brevo.com/v3/smtp/email",
     {
@@ -6,19 +31,19 @@ export async function sendOTPEmail(email, otp) {
 
       headers: {
         accept: "application/json",
-        "api-key": process.env.BREVO_API_KEY,
+        "api-key": apiKey,
         "content-type": "application/json",
       },
 
       body: JSON.stringify({
         sender: {
           name: "Aiwa Fruits",
-          email: process.env.BREVO_SENDER_EMAIL,
+          email: senderEmail,
         },
 
         to: [
           {
-            email,
+            email: email,
           },
         ],
 
@@ -35,7 +60,7 @@ export async function sendOTPEmail(email, otp) {
             border-radius: 12px;
           ">
 
-            <h2 style="color: #047857;">
+            <h2 style="color:#047857;">
               Aiwa Fruits
             </h2>
 
@@ -48,11 +73,11 @@ export async function sendOTPEmail(email, otp) {
             </p>
 
             <div style="
-              font-size: 32px;
-              font-weight: bold;
-              letter-spacing: 8px;
-              margin: 25px 0;
-              color: #047857;
+              font-size:32px;
+              font-weight:bold;
+              letter-spacing:8px;
+              margin:25px 0;
+              color:#047857;
             ">
               ${otp}
             </div>
@@ -62,7 +87,7 @@ export async function sendOTPEmail(email, otp) {
               <strong>5 minutes</strong>.
             </p>
 
-            <p style="color: #6b7280;">
+            <p style="color:#6b7280;">
               If you did not request a password reset,
               please ignore this email.
             </p>
@@ -70,8 +95,8 @@ export async function sendOTPEmail(email, otp) {
             <hr />
 
             <p style="
-              font-size: 12px;
-              color: #9ca3af;
+              font-size:12px;
+              color:#9ca3af;
             ">
               © ${new Date().getFullYear()} Aiwa Fruits
             </p>
@@ -91,13 +116,12 @@ export async function sendOTPEmail(email, otp) {
     );
 
     throw new Error(
-      data?.message ||
-      "Failed to send email"
+      data?.message || "Brevo email failed"
     );
   }
 
   console.log(
-    "OTP Email sent successfully:",
+    "OTP email sent successfully:",
     data
   );
 
