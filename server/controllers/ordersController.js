@@ -4,7 +4,7 @@ import ProductDatabase from "../model/productModel.js";
 import axios from 'axios'
 
 
-// orderController.js ഫയലിൽ:
+
 
 async function sendWhatsAppNotification(order) {
   try {
@@ -12,7 +12,7 @@ async function sendWhatsAppNotification(order) {
     const phoneNumberId = "1307687399087389";
     const ownerPhoneNumber = "917356884862";
 
-    // 🛍️ പ്രോഡക്റ്റുകൾ സ്റ്റൈലിഷായി ലിസ്റ്റ് ചെയ്യാൻ Map ചെയ്യുന്നു
+
     const itemsList = order.items
       .map(
         (item, index) =>
@@ -21,7 +21,7 @@ async function sendWhatsAppNotification(order) {
       )
       .join("\n\n");
 
-    // 💬 WhatsApp Message Text Structure
+
     const messageBody = 
 `🛍️ *NEW ORDER RECEIVED!* 🛍️
 ──────────────────────────
@@ -84,7 +84,7 @@ export async function OrdersController(req, res) {
       totalAmount,
     } = req.body;
 
-    // Check Stock
+
     for (const item of items) {
       const product = await ProductDatabase.findById(item.productId);
 
@@ -103,7 +103,7 @@ export async function OrdersController(req, res) {
       }
     }
 
-    // Save Order
+
     const newOrder = new orderDatabae({
       userId,
       shippingAddress,
@@ -117,7 +117,7 @@ export async function OrdersController(req, res) {
 
     await sendWhatsAppNotification(newOrder);
 
-    // Reduce Stock
+
     for (const item of items) {
       await ProductDatabase.findByIdAndUpdate(
         item.productId,
@@ -129,7 +129,7 @@ export async function OrdersController(req, res) {
       );
     }
 
-    // Clear Cart
+
     await Cart.findOneAndUpdate(
       { userId },
       {
@@ -158,7 +158,7 @@ export async function GetAllOrdersController(req, res) {
   try {
     const orders = await orderDatabae
       .find()
-      .sort({ createdAt: -1 }) // Latest first
+      .sort({ createdAt: -1 })
       .populate("userId", "fullname email")
       .populate("items.productId", "Productname Price Image");
 

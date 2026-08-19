@@ -21,10 +21,8 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* Home */}
         <Route path="/" element={<Home />} />
 
-        {/* Authentication */}
         <Route
           path="/user-login"
           element={<LoginPage />}
@@ -40,25 +38,21 @@ function App() {
           element={<ForgotPassword />}
         />
 
-        {/* Products */}
         <Route
           path="/product-Page"
           element={<ProductPage />}
         />
 
-        {/* Cart */}
         <Route
           path="/Cart-items"
           element={<CartPage />}
         />
 
-        {/* Checkout */}
         <Route
           path="/Check-out"
           element={<CheckoutPage />}
         />
 
-        {/* Orders */}
         <Route
           path="/Myorders"
           element={<MyOrders />}
@@ -69,7 +63,6 @@ function App() {
           element={<OrderDetails />}
         />
 
-        {/* Dashboard */}
         <Route
           path="/Dashboard"
           element={
@@ -81,7 +74,6 @@ function App() {
 
       </Routes>
 
-      {/* Toast Notifications */}
       <ToastContainer />
 
     </BrowserRouter>

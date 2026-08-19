@@ -12,12 +12,10 @@ function OrderSummary({ showButton, CheckoutData }) {
       }, 0)
     : 0;
 
-  // Delivery method select ചെയ്താൽ അതിന്റെ charge ഉടനെ എടുക്കും
   const shipping = CheckoutData?.delivery?.charge || 0;
 
   const tax = 0;
 
-  // Delivery charge ഉൾപ്പെടെ total
   const total = subtotal + shipping + tax;
 
   const deliverySelected = !!CheckoutData?.delivery?.method;
@@ -26,7 +24,6 @@ function OrderSummary({ showButton, CheckoutData }) {
     <aside className="lg:sticky lg:top-24 h-fit">
       <div className="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-2xs space-y-5">
 
-        {/* Title */}
         <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
           <h2 className="text-lg font-extrabold text-slate-900">
             Order Summary

@@ -80,7 +80,6 @@ function Orders() {
   return (
     <div className="space-y-6">
 
-      {/* Section Header */}
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center shrink-0">
           <Package size={20} />
@@ -95,7 +94,6 @@ function Orders() {
         </div>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statCards.map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs flex items-center gap-3">
@@ -110,7 +108,6 @@ function Orders() {
         ))}
       </div>
 
-      {/* Search + Filter */}
       <div className="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-2xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-96">
           <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -138,7 +135,6 @@ function Orders() {
         </select>
       </div>
 
-      {/* Table */}
       <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
         {loading ? (
           <div className="p-16 text-center">

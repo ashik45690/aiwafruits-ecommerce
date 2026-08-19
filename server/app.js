@@ -39,8 +39,6 @@ app.use(cookie())
 
 
 
-// mongoDb connection
-
 Database()
 
 

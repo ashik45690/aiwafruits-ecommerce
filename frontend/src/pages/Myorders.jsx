@@ -34,7 +34,6 @@ function MyOrders() {
     const response = await CancelOrderService(orderId);
 
     if (response?.success) {
-      // Remove cancelled order from UI
       setOrders((prevOrders) =>
         prevOrders.filter((order) => order._id !== orderId)
       );

@@ -21,9 +21,6 @@ function AddProduct() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  // =========================
-  // AI DESCRIPTION
-  // =========================
   async function HandlegeminiAuto() {
     const ProductName = NewproductData.Productname.trim();
 
@@ -59,9 +56,6 @@ function AddProduct() {
     }
   }
 
-  // =========================
-  // IMAGE
-  // =========================
   const handleImage = (e) => {
     const file = e.target.files[0];
 
@@ -75,9 +69,6 @@ function AddProduct() {
     }
   };
 
-  // =========================
-  // INPUT CHANGE
-  // =========================
   const handleForm = (e) => {
     const { name, value } = e.target;
 
@@ -87,9 +78,6 @@ function AddProduct() {
     }));
   };
 
-  // =========================
-  // SAVE PRODUCT
-  // =========================
   async function fetchData() {
     if (isSaving) {
       return;
@@ -111,9 +99,6 @@ function AddProduct() {
 
       console.log("Product added successfully:", response);
 
-      // =========================
-      // RESET AFTER SUCCESS
-      // =========================
       setNewproductData(initialProductData);
       setImage(null);
 
@@ -126,9 +111,6 @@ function AddProduct() {
 
   return (
     <div>
-      {/* =========================
-          HEADER
-      ========================= */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-7">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center justify-center shrink-0">
@@ -146,7 +128,6 @@ function AddProduct() {
           </div>
         </div>
 
-        {/* SAVE BUTTON */}
         <button
           className="bg-emerald-700 hover:bg-emerald-800 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-xs flex items-center gap-2 cursor-pointer"
           onClick={fetchData}
@@ -160,14 +141,8 @@ function AddProduct() {
         </button>
       </div>
 
-      {/* =========================
-          MAIN GRID
-      ========================= */}
       <div className="grid lg:grid-cols-12 gap-6">
 
-        {/* =========================
-            LEFT — SPECIFICATIONS
-        ========================= */}
         <div className="lg:col-span-8 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs">
 
           <h2 className="text-base font-bold text-slate-900 pb-4 border-b border-slate-100 mb-5">
@@ -176,7 +151,6 @@ function AddProduct() {
 
           <div className="grid md:grid-cols-2 gap-5">
 
-            {/* PRODUCT NAME */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Product Name
@@ -192,7 +166,6 @@ function AddProduct() {
               />
             </div>
 
-            {/* CATEGORY */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Category
@@ -226,7 +199,6 @@ function AddProduct() {
               </select>
             </div>
 
-            {/* PRICE */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Price (₹ per kg)
@@ -242,7 +214,6 @@ function AddProduct() {
               />
             </div>
 
-            {/* STOCK */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Stock Quantity (kg)
@@ -259,9 +230,6 @@ function AddProduct() {
             </div>
           </div>
 
-          {/* =========================
-              DESCRIPTION
-          ========================= */}
           <div className="mt-5">
 
             <label className="block text-xs font-bold text-slate-700 mb-1.5">
@@ -282,9 +250,6 @@ function AddProduct() {
               placeholder="Describe the freshness, origin, taste, and quality..."
             />
 
-            {/* =========================
-                AI GENERATE BUTTON
-            ========================= */}
             <button
               type="button"
               onClick={HandlegeminiAuto}
@@ -303,9 +268,6 @@ function AddProduct() {
           </div>
         </div>
 
-        {/* =========================
-            RIGHT — IMAGE UPLOAD
-        ========================= */}
         <div className="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-2xs">
 
           <h2 className="text-base font-bold text-slate-900 pb-4 border-b border-slate-100 mb-5">

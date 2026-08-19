@@ -72,7 +72,6 @@ function Navbar() {
           </div>
         </div>
 
-        {/* Desktop Navigation */}
         <ul className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
           <li
             onClick={() => HandleNavigate("/")}
@@ -119,10 +118,8 @@ function Navbar() {
           </li>
         </ul>
 
-        {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4">
 
-          {/* Search Box */}
           <div className="w-56 h-10 bg-slate-50 border border-slate-200 focus-within:border-emerald-500 focus-within:bg-white rounded-full px-3.5 flex items-center gap-2 transition-all duration-200">
             <Search size={16} className="text-slate-400" />
             <input
@@ -139,7 +136,6 @@ function Navbar() {
             />
           </div>
 
-          {/* Cart Icon Button */}
           <button 
             onClick={() => navigate('/Cart-items')}
             className="relative w-10 h-10 rounded-full bg-emerald-50 hover:bg-emerald-100/80 border border-emerald-100 flex items-center justify-center transition-all duration-200 cursor-pointer"
@@ -153,7 +149,6 @@ function Navbar() {
             )}
           </button>
 
-          {/* Auth Button */}
           {loading ? (
             <div className="w-24 h-9 bg-slate-100 animate-pulse rounded-full"></div>
           ) : user ? (
@@ -176,7 +171,6 @@ function Navbar() {
 
         </div>
 
-        {/* Mobile Controls (Cart + Hamburger) */}
         <div className="flex items-center gap-3 md:hidden">
           <button 
             onClick={() => navigate('/Cart-items')}
@@ -201,7 +195,6 @@ function Navbar() {
 
       </nav>
 
-      {/* Mobile Drawer Menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-b border-emerald-100 px-5 py-6 shadow-xl animate-in slide-in-from-top-2 duration-200">
           <ul className="flex flex-col gap-1 text-slate-700 font-semibold text-sm">
@@ -234,16 +227,6 @@ function Navbar() {
               <Grid3X3 size={18} className="text-emerald-700" />
               <span>My Orders</span>
             </li>
-
-            {/* <li
-              onClick={() => HandleNavigate("/Dashboard")}
-              className={`flex items-center gap-3 cursor-pointer p-3 rounded-xl transition ${
-                isActive("/Dashboard") ? "bg-emerald-50 text-emerald-800 font-bold" : "hover:bg-slate-50"
-              }`}
-            >
-              <User size={18} className="text-emerald-700" />
-              <span>Dashboard</span>
-            </li> */}
 
             <li
               onClick={() => HandleNavigate("/Cart-items")}

@@ -29,7 +29,6 @@ function Cartlist() {
     }
   };
 
-  // Empty Cart View
   if (!cart || cart.length === 0) {
     return (
       <div className="bg-white rounded-2xl border border-slate-200/90 p-12 flex flex-col items-center justify-center text-center shadow-2xs">

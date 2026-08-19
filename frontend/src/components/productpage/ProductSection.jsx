@@ -16,17 +16,11 @@ function ProductSection({ category }) {
 
   const { fetchCartData } = userCart();
 
-  // ----------------------------------------
-  // Normalize category
-  // ----------------------------------------
   const normalize = (value) =>
     (value ?? "").toString().trim().toLowerCase();
 
   const normalizedCategory = normalize(category);
 
-  // ----------------------------------------
-  // Filter products
-  // ----------------------------------------
   const FilterProducts =
     !normalizedCategory || normalizedCategory === "all"
       ? Products
@@ -36,17 +30,11 @@ function ProductSection({ category }) {
           return productCategory === normalizedCategory;
         });
 
-  // ----------------------------------------
-  // Fetch products
-  // ----------------------------------------
 useEffect(() => {
   const fetchProducts = async () => {
     const CACHE_KEY = "aiwa_fruits_products";
-    const CACHE_TIME = 5 * 60 * 1000; // 5 minutes
+    const CACHE_TIME = 5 * 60 * 1000;
 
-    // ----------------------------------------
-    // 1. Check cached products
-    // ----------------------------------------
     try {
       const cachedData = localStorage.getItem(CACHE_KEY);
 
@@ -59,8 +47,6 @@ useEffect(() => {
         if (isValid && Array.isArray(parsed.products)) {
           setProducts(parsed.products);
 
-          // Important:
-          // Don't show skeleton when cached data exists
           setLoading(false);
         }
       }
@@ -68,9 +54,6 @@ useEffect(() => {
       console.error("Cache read error:", error);
     }
 
-    // ----------------------------------------
-    // 2. Fetch fresh products
-    // ----------------------------------------
     try {
       const response = await getProductData();
 
@@ -81,9 +64,6 @@ useEffect(() => {
       if (productList.length > 0) {
         setProducts(productList);
 
-        // ----------------------------------------
-        // 3. Save fresh data to cache
-        // ----------------------------------------
         localStorage.setItem(
           CACHE_KEY,
           JSON.stringify({
@@ -95,7 +75,6 @@ useEffect(() => {
     } catch (error) {
       console.error("Failed to fetch products:", error);
 
-      // If cache exists, keep showing cached products
       setProducts((currentProducts) => currentProducts);
     } finally {
       setLoading(false);
@@ -105,9 +84,6 @@ useEffect(() => {
   fetchProducts();
 }, []);
 
-  // ----------------------------------------
-  // Add product to cart
-  // ----------------------------------------
   const CartHandle = async (ProductId) => {
     try {
       if (!ProductId) return;
@@ -139,9 +115,6 @@ useEffect(() => {
     }
   };
 
-  // ----------------------------------------
-  // Page heading
-  // ----------------------------------------
   const sectionTitle =
     category === "All" || !category
       ? "Organic Fresh Harvest"

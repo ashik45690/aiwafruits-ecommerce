@@ -1,4 +1,4 @@
-// src/utils/invoice.js
+
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -8,9 +8,6 @@ export const downloadInvoice = (order) => {
 
   const shipping = order.shippingAddress;
 
-  // ==========================
-  // Header
-  // ==========================
 
   doc.setFillColor(34, 139, 34);
   doc.rect(0, 0, 210, 38, "F");
@@ -42,9 +39,6 @@ export const downloadInvoice = (order) => {
     31
   );
 
-  // ==========================
-  // Customer Card
-  // ==========================
 
   doc.setDrawColor(220);
   doc.setFillColor(248, 248, 248);
@@ -93,9 +87,6 @@ export const downloadInvoice = (order) => {
     80
   );
 
-  // ==========================
-  // Products
-  // ==========================
 
   autoTable(doc, {
     startY: 100,
@@ -134,9 +125,6 @@ export const downloadInvoice = (order) => {
     },
   });
 
-  // ==========================
-  // Total Card
-  // ==========================
 
   const finalY = doc.lastAutoTable.finalY + 15;
 
@@ -159,9 +147,6 @@ export const downloadInvoice = (order) => {
     finalY + 12
   );
 
-  // ==========================
-  // Footer
-  // ==========================
 
   doc.setDrawColor(220);
   doc.line(14, 272, 196, 272);

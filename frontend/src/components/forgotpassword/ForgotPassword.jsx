@@ -31,10 +31,6 @@ function ForgotPassword() {
 
   const [loading, setLoading] = useState(false);
 
-  // =========================
-  // SEND OTP
-  // =========================
-
   async function FormHandle(e) {
     e.preventDefault();
 
@@ -67,10 +63,6 @@ function ForgotPassword() {
       setLoading(false);
     }
   }
-
-  // =========================
-  // VERIFY OTP
-  // =========================
 
   async function VerifyOTP(e) {
     e.preventDefault();
@@ -114,10 +106,6 @@ function ForgotPassword() {
       setLoading(false);
     }
   }
-
-  // =========================
-  // RESET PASSWORD
-  // =========================
 
   async function ResetPassword(e) {
     e.preventDefault();
@@ -171,10 +159,6 @@ function ForgotPassword() {
     }
   }
 
-  // =========================
-  // RESEND OTP
-  // =========================
-
   async function ResendOTP() {
     try {
       setLoading(true);
@@ -212,8 +196,6 @@ function ForgotPassword() {
 
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-lg p-8">
 
-          {/* Brand Icon */}
-
           <div className="flex flex-col items-center text-center mb-8">
 
             <div className="w-14 h-14 rounded-2xl bg-emerald-700 flex items-center justify-center mb-4 shadow-md">
@@ -245,10 +227,6 @@ function ForgotPassword() {
 
           </div>
 
-
-          {/* =========================
-              STEP 1
-          ========================= */}
 
           {step === 1 && (
 
@@ -304,10 +282,6 @@ function ForgotPassword() {
 
           )}
 
-
-          {/* =========================
-              STEP 2
-          ========================= */}
 
           {step === 2 && (
 
@@ -401,10 +375,6 @@ function ForgotPassword() {
           )}
 
 
-          {/* =========================
-              STEP 3
-          ========================= */}
-
           {step === 3 && (
 
             <form
@@ -492,8 +462,6 @@ function ForgotPassword() {
 
           )}
 
-
-          {/* Back to Login */}
 
           <div className="text-center mt-6">
 

@@ -10,7 +10,6 @@ export function CartProvider({ children }) {
   const { user, loading: authLoading } = useContext(AuthContext);
 
   const fetchCartData = async () => {
-    // User login ചെയ്തിട്ടില്ലെങ്കിൽ cart fetch ചെയ്യേണ്ട
     if (!user) {
       setCart([]);
       return;
@@ -29,7 +28,6 @@ export function CartProvider({ children }) {
   };
 
   useEffect(() => {
-    // Auth check complete ആയതിന് ശേഷം മാത്രം cart fetch ചെയ്യുക
     if (!authLoading) {
       fetchCartData();
     }

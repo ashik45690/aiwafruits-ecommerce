@@ -233,10 +233,6 @@ export async function logout(req, res) {
 }
 
 
-/* =====================================================
-   FORGOT PASSWORD - SEND OTP
-===================================================== */
-
 export async function SendForgottPasswordOTP(req, res) {
   try {
 
@@ -257,11 +253,6 @@ export async function SendForgottPasswordOTP(req, res) {
       email: TrimmedEmail,
     });
 
-    /*
-      Don't reveal whether an email exists.
-      This is safer for password reset.
-    */
-
     if (!user) {
       return res.status(200).json({
         success: true,
@@ -270,17 +261,9 @@ export async function SendForgottPasswordOTP(req, res) {
       });
     }
 
-    /*
-      Generate 6 digit OTP
-    */
-
     const otp = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
-
-    /*
-      Hash OTP before storing
-    */
 
     const hashedOTP = await bcrypt.hash(
       otp,
@@ -294,10 +277,6 @@ export async function SendForgottPasswordOTP(req, res) {
     );
 
     await user.save();
-
-    /*
-      Send OTP using Brevo
-    */
 
     await sendOTPEmail(
       TrimmedEmail,
@@ -327,10 +306,6 @@ export async function SendForgottPasswordOTP(req, res) {
   }
 }
 
-
-/* =====================================================
-   FORGOT PASSWORD - VERIFY OTP
-===================================================== */
 
 export async function verifyForgotPasswordOTP(
   req,
@@ -367,10 +342,6 @@ export async function verifyForgotPasswordOTP(
       });
     }
 
-    /*
-      Check expiry
-    */
-
     if (
       new Date() > user.otpExpiry
     ) {
@@ -386,10 +357,6 @@ export async function verifyForgotPasswordOTP(
       });
     }
 
-    /*
-      Compare OTP
-    */
-
     const isValidOTP =
       await bcrypt.compare(
         otp.toString(),
@@ -403,19 +370,10 @@ export async function verifyForgotPasswordOTP(
       });
     }
 
-    /*
-      OTP verified.
-      Clear OTP from database.
-    */
-
     user.otp = null;
     user.otpExpiry = null;
 
     await user.save();
-
-    /*
-      Temporary password reset token
-    */
 
     const resetToken = jwt.sign(
       {
@@ -450,10 +408,6 @@ export async function verifyForgotPasswordOTP(
   }
 }
 
-
-/* =====================================================
-   FORGOT PASSWORD - RESET PASSWORD
-===================================================== */
 
 export async function resetPassword(
   req,
@@ -497,10 +451,6 @@ export async function resetPassword(
       });
     }
 
-    /*
-      Verify reset token
-    */
-
     const decoded = jwt.verify(
       resetToken,
       process.env.JWT_SECRET
@@ -517,10 +467,6 @@ export async function resetPassword(
       });
     }
 
-    /*
-      Find user
-    */
-
     const user =
       await UserDatabase.findById(
         decoded.userId
@@ -532,10 +478,6 @@ export async function resetPassword(
         message: "User not found",
       });
     }
-
-    /*
-      Hash new password
-    */
 
     const hashedPassword =
       await bcrypt.hash(
